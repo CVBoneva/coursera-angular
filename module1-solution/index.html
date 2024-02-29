@@ -1,1 +1,21 @@
-
+<!DOCTYPE html>
+<html ng-app="LunchCheck">
+  <head>
+    <meta charset="utf-8">
+    <script src="angular.min.js"></script>
+    <script src="app.js"></script>
+    <style>body { font-size: 1.3em; }</style>
+    <title>Lunch evaluation - assignment 1</title>
+  </head>
+  <body>
+    <h1>Lunch evaluation</h1>
+    <div ng-controller="LunchCheckController">
+        <div>
+          <input type="text" ng-model = "name" ng-blur = "upper();">
+          <button ng-click="showNextImage()">Show next image</button>
+          <br>
+          <img ng-src="images/png{{whichImage}}.png">
+        </div>
+    </div>
+  </body>
+</html>
