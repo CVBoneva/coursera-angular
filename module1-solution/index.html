@@ -4,17 +4,44 @@
     <meta charset="utf-8">
     <script src="angular.min.js"></script>
     <script src="app.js"></script>
-    <style>body { font-size: 1.3em; }</style>
+    <style>body { font-size: 1.3em; }
+        .redValidation{
+            border-color: red;
+            background-color: lightpink;
+            color: red;
+        } 
+        .greenValidation{
+            border-color: green;
+            color: green;
+            background-color: lightgreen;
+        }   
+        .defaultValidation{
+            border-color: black;
+            color: black;
+            background-color: white;
+        }    
+        .comment  { font-size: 0.7em; font-style: italic;}
+    </style>
     <title>Lunch evaluation - assignment 1</title>
   </head>
   <body>
     <h1>Lunch evaluation</h1>
     <div ng-controller="LunchCheckController">
         <div>
-          <input type="text" ng-model = "name" ng-blur = "upper();">
-          <button ng-click="showNextImage()">Show next image</button>
+          Please enter your lunch (comma-separated items):
+          
+          <input type="text" ng-model = "lunchItems" ng-blur="clearMessages()" class="{{classColors}}"><br>
           <br>
-          <img ng-src="images/png{{whichImage}}.png">
+          <div class="comment">(Empty items are NOT to be considered)</div>
+          <br>
+          <div>
+            <button ng-click="checkIfTooMuch()">Check If Too Much</button>
+          </div>  
+          <br>
+          <div >
+            {{errorMsg}}
+            {{resultMsg}}
+          </div>
         </div>
     </div>
   </body>
