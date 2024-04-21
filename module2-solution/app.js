@@ -3,93 +3,69 @@
   {
     'use strict';
 
-    angular.module('LunchCheck', [])
-    
-    .controller('LunchCheckController', LunchCheckController);
+    angular.module('ShoppingListCheckOff', [])    
+    .controller('ToBuyController', ToBuyController)
+    .controller('AlreadyBoughtController', AlreadyBoughtController)
+    .service('ShoppingListCheckOffService', ShoppingListCheckOffService)
+    ;
 
-    LunchCheckController.$inject = ['$scope'];
-    function LunchCheckController($scope)
+    function ShoppingListCheckOffService()
     {
+      var service = this;
+      var items = [];
 
-      const strEmptyField = "Please enter data first";
-      const strEnjoy = "Enjoy!";
-      const strTooMuch = "Too much!";
-      const strNotValid = "Please enter valid data";
-      const fieldColors = {msgOk: "greenValidation", msgNotOk: "redValidation", msgDefault: "defaultValidation"};
-      $scope.classColors = fieldColors.msgDefault;
-
-      var initString = function()
+      //array initialization
+      var i = 0;
+      while(i < 10)
       {
-        return "";
+        var item = {idx: i, name:"product #" + i, quantity: 5+i, state:"0"};
+        items.push(item);
+        i++;
       }
 
-      $scope.clearMessages = function()
+      service.getItems = function()
       {
-        $scope.errorMsg = initString();
-        $scope.resultMsg = initString();
-        $scope.classColors = fieldColors.msgDefault;
+        return items;
       }
 
-      $scope.lunchItems = initString();
-      $scope.clearMessages();
-
-      $scope.checkIfTooMuch = function()
+      service.checkState = function(state)
       {
-        
-        $scope.clearMessages();
-
-        if (!$scope.checkInput ())
-        {
-          return true;
-        }
-
-        $scope.resultMsg = $scope.countItems();
-        return true;
+        return items.find(x=>x.state == state) === undefined;
       }
 
-      $scope.checkInput = function()
+      service.removeItem = function(index)
       {
-        if ($scope.lunchItems == "")
-        {
-          $scope.errorMsg = strEmptyField;
-          $scope.classColors = fieldColors.msgNotOk;
-          return false;
-        }
-        return true;
+        items.find(x=>x.idx == index).state = '1';
       }
-
-      $scope.countItems = function()
-      {
-        var str = $scope.lunchItems;
-        var arr = str.split(',');
-
-        function isEmpty(value) { 
-          console.log(value);
-          return !(value == "" || value == null || value == undefined); 
-        } 
-
-        var arr1 = arr.filter(isEmpty);
-
-        
-        if (arr1.length == 0)
-        {
-          $scope.errorMsg = strNotValid;
-          $scope.classColors = fieldColors.msgNotOk;
-          return '';
-        }
-        else if (arr1.length <= 3)
-        {
-          $scope.classColors = fieldColors.msgOk;
-          return strEnjoy;
-        }
-        else
-        {
-          $scope.classColors = fieldColors.msgNotOk;
-          return strTooMuch;
-        }
-      }
-     
     }
-        
-  }
+
+    ToBuyController.$inject = ['ShoppingListCheckOffService'];
+    function ToBuyController(ShoppingListCheckOffService)
+    {
+      var list1 = this;
+      list1.items = ShoppingListCheckOffService.getItems();
+
+      list1.isEverythingBought = function()
+      {
+        return ShoppingListCheckOffService.checkState(0);
+      }
+
+      list1.removeItem = function(index)
+      {
+        return ShoppingListCheckOffService.removeItem(index);
+      }
+    }
+
+    AlreadyBoughtController.$inject = ['ShoppingListCheckOffService'];
+    function AlreadyBoughtController(ShoppingListCheckOffService)
+    {
+      var list2 = this;
+      list2.items = ShoppingListCheckOffService.getItems();
+
+      list2.isNothingBought = function()
+      {
+        return ShoppingListCheckOffService.checkState(1);
+      }
+    }
+ }
 )();

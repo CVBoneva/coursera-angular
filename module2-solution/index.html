@@ -1,51 +1,59 @@
-<!DOCTYPE html>
-<html ng-app="LunchCheck">
+<!doctype html>
+<html lang="en" ng-app="ShoppingListCheckOff">
   <head>
-    <meta charset="utf-8">
+    <title>Shopping List Check Off</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="angular.min.js"></script>
     <script src="app.js"></script>
+    <link rel="stylesheet" href="styles/bootstrap.min.css">
     <style>
-        body { font-size: 1.3em; }
-        input { font-size: 1.3em; }
-        button { font-size: 1em; }
-        .redValidation{
-            border-color: red;
-            /*background-color: lightpink;*/
-            color: red;
-        } 
-        .greenValidation{
-            border-color: green;
-            color: green;
-            /*background-color: lightgreen;*/
-        }   
-        .defaultValidation{
-            border-color: black;
-            color: black;
-            /*background-color: white;*/
-        }    
-        .comment  { font-size: 0.7em; font-style: italic;}
+      .emptyMessage {
+        font-weight: bold;
+        color: red;
+        font-size: 1.2em;
+      }
+      li {
+        margin-bottom: 7px;
+        font-size: 1.2em;
+      }
+      li > button {
+        margin-left: 6px;
+      }
+      button > span {
+        color: green;
+      }
     </style>
-    <title>Lunch evaluation - assignment 1</title>
   </head>
-  <body>
-    <h1>Lunch evaluation</h1>
-    <div ng-controller="LunchCheckController">
-        <div>
-          Please enter your lunch (comma-separated items):
-          
-          <input type="text" ng-model = "lunchItems" ng-blur="clearMessages()" class="{{classColors}}"><br>
-          <br>
-          <div class="comment">(Empty items are NOT to be considered)</div>
-          <br>
-          <div>
-            <button ng-click="checkIfTooMuch()">Check If Too Much</button>
-          </div>  
-          <br>
-          <div >
-            {{errorMsg}}
-            {{resultMsg}}
-          </div>
-        </div>
+<body>
+  <div class="container">
+  <h1>Shopping List Check Off</h1>
+
+  <div class="row">
+
+    <!-- To Buy List -->
+    <div class="col-md-6" ng-controller="ToBuyController as list1">
+     <h2>To Buy:</h2>
+     <ul>
+      <li ng-repeat="item in list1.items | filter : {'state' : '0'}">
+        {{item.quantity}} of {{item.name}}
+        <button class="btn btn-default" ng-click="list1.removeItem(item.idx);"><span class="glyphicon glyphicon-ok"></span> Bought</button>
+      </li>   
+     </ul>
+     <div class="emptyMessage" ng-if="list1.isEverythingBought()">Everything is bought!</div>
     </div>
-  </body>
+
+    <!-- Already Bought List -->
+    <div class="col-md-6" ng-controller="AlreadyBoughtController as list2">
+     <h2>Already Bought:</h2>
+     <ul>
+      <li ng-repeat="item in list2.items | filter : {'state' : '1'}">
+        Bought {{item.quantity}} {{item.name}}
+      </li>   
+     </ul>
+     <div class="emptyMessage" ng-if="list2.isNothingBought()">Nothing bought yet.</div>
+    </div>
+  </div>
+</div>
+
+</body>
 </html>
